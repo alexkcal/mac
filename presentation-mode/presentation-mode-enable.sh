@@ -1,11 +1,12 @@
 #!/bin/sh
 
-# presentation-mode.sh
-# Use this script to configure a Mac for presentation mode:
+# presentation-mode-enable.sh
+# Use this script to configure and enable a Mac for presentation mode:
 # Removes the configuration profile for a default screensaver lock time
 # Deploys a configuration profile to change power settings to not sleep, hibernate, or turn off the screen
 # Designed for use with JAMF Casper Suite for Self Service and deploying configuration profiles
 # Can be modified to use with locally installed configuration profiles
+# Use with presentation-mode-disable.sh to disable presentation mode
 
 # Alex Kim - EEI, UC Berkeley
 # 2015.10.16
@@ -69,3 +70,5 @@ echo "<?xml version="1.0" encoding="UTF-8"?>
 
 # Kill cfprefsd to apply new settings
 # /usr/bin/killall cfprefsd
+
+exit 0
