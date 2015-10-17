@@ -10,17 +10,27 @@
 # Alex Kim - EEI, UC Berkeley
 # 2015.10.16
 
-# Modify these values to work for your company
+### Modify these values to work for your environment ###
 # Path to the Company plist PATH/TO/COMPANY/PLIST e.g. /Library/Company/com.company.group
 companyPath="/Library/EEI/edu.berkeley.eei"
 echo "$companyPath"
 
-# Obtain plist name from companyPlist path
+# Obtain plist filename from companyPlist path
 companyPlist="echo ${companyPath##*/}"
 echo "$companyPlist"
 
 # Time in seconds to automatically disable Presentation Mode. Default is 24 hours or 86400 seconds
 disableTime="86400"
+
+### End of values to modify ###
+
+# Backup the current power settings plist. Delete the backup file if it exists
+if [ -f "/Library/Preferences/SystemConfiguration/com.apple.PowerManagement.backup"];
+then
+	rm -rf "/Library/Preferences/SystemConfiguration/com.apple.PowerManagement.backup"
+fi
+
+/bin/cp "/Library/Preferences/SystemConfiguration/com.apple.PowerManagement.plist" "/Library/Preferences/SystemConfiguration/com.apple.PowerManagement.backup"
 
 # Write the value in the plist to enable to Presentation Mode
 /usr/bin/defaults write "$companyPath" presentationmode "enabled"
