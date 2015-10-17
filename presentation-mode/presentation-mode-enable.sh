@@ -33,7 +33,7 @@ fi
 
 /bin/cp "/Library/Preferences/SystemConfiguration/com.apple.PowerManagement.plist" "/Library/Preferences/SystemConfiguration/com.apple.PowerManagement.backup"
 
-# Write the value in the plist to enable to Presentation Mode
+# Write the value in the plist to enable Presentation Mode
 /usr/bin/defaults write "$companyPath" presentationmode "enabled"
 
 # Run recon to evaluate plist for Casper Extension Attribute for Smart Group changes
