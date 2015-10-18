@@ -61,7 +61,7 @@ fi
 			    end tell
 			EOF
 
-# Create launchdaemon to 
+# Create launchdaemon to automatically disable presentation mode at desired time limit
 echo "<?xml version="1.0" encoding="UTF-8"?> 
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd"> 
 <plist version="1.0"> 
@@ -72,7 +72,7 @@ echo "<?xml version="1.0" encoding="UTF-8"?>
 	<string>"$companyPlist".disablepm</string> 
 	<key>ProgramArguments</key> 
 	<array> 
-		<string>/usr/local/jamf/bin/jamf</string>
+		<string>/usr/local/bin/jamf</string>
 		<string>policy</string>
 		<string>-event</string>
 		<string>disablePM</string>
@@ -81,6 +81,14 @@ echo "<?xml version="1.0" encoding="UTF-8"?>
 	<integer>"$disableTime"</integer> 
 </dict> 
 </plist>" > /Library/LaunchDaemons/"$companyPlist".disablepm.plist
+
+# Set permissions on the launchdaemon plist
+/usr/sbin/chown root:wheel /Library/LaunchDaemons/"$companyPlist".disablepm.plist
+/bin/chmod 644 /Library/LaunchDaemons/"$companyPlist".disablepm.plist
+/usr/bin/defaults write /Library/LaunchDaemons/"$companyPlist".disablepm.plist disabled -bool false
+
+# Load the launchdaemon
+/bin/launchctl load -w /Library/LaunchDaemons/"$companyPlist".disablepm.plist
 
 # Kill cfprefsd to apply new settings
 # /usr/bin/killall cfprefsd
