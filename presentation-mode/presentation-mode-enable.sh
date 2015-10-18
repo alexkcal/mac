@@ -11,7 +11,8 @@
 # Alex Kim - EEI, UC Berkeley
 # 2015.10.16
 
-### Modify these values to work for your environment ###
+########## Modify these values to work for your environment ##########
+
 # Path to the Company plist PATH/TO/COMPANY/PLIST e.g. /Library/Company/com.company.group
 companyPath="/Library/EEI/edu.berkeley.eei"
 echo "$companyPath"
@@ -36,7 +37,7 @@ fi
 # Time in seconds to automatically disable Presentation Mode. Default is 24 hours or 86400 seconds
 disableTime="86400"
 
-### End of values to modify ###
+########## End of values to modify ##########
 
 # Backup the current power settings plist. Delete the backup file if it exists
 if [ -f "/Library/Preferences/SystemConfiguration/com.apple.PowerManagement.backup"];
