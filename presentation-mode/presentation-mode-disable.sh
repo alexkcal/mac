@@ -11,19 +11,21 @@
 # Alex Kim - EEI, UC Berkeley
 # 2015.10.16
 
-### Modify these values to work for your environment ###
-# Path to the Company plist PATH/TO/COMPANY/PLIST e.g. /Library/Company/com.company.group
-companyPath="/Library/EEI/edu.berkeley.eei"
+########## Modify these values to work for your environment ##########
+
+# Modify path to the company plist /PATH/TO/COMPANY/PLIST e.g. /Library/Company/com.company.group
+companyPath="/PATH/TO/COMPANY/PLIST"
 echo "$companyPath"
 
-# Obtain plist filename from companyPlist path
-companyPlist="echo ${companyPath##*/}"
+# Obtain plist filename from company path. Generally, no modification needed.
+companyPlist=`echo ${companyPath##*/}`
 echo "$companyPlist"
 
-# Time in seconds to automatically disable Presentation Mode. Default is 24 hours or 86400 seconds
-disableTime="86400"
+# Obtain the directory in the company path to confirm the directory exists. Generally, no modification needed.
+companyPathDir=`echo $companyPath | sed 's:/[^/]*$::'`
+echo "$companyPathDir"
 
-### End of values to modify ###
+########## End of values to modify ##########
 
 # Message to user that the Mac is in Presentation Mode and is being automatically disabled now
 /usr/bin/osascript <<-EOF
@@ -34,24 +36,33 @@ disableTime="86400"
 			EOF
 
 # Write the value in the plist to disable Presentation Mode
+echo "Write value in plist for presentationmode to be disabled"
 /usr/bin/defaults write "$companyPath" presentationmode "disabled"
 
 # Run recon to evaluate plist for Casper Extension Attribute for Smart Group changes
+echo "Run recon to update inventory for EA and Smart Groups"
 /usr/local/bin/jamf recon
 
 # Delete the power management file because it contains the Energy Saver plist values
 # Copy the backup power management settings which has the previous user-defined settings
 # Delete the backup power management settings file
+echo "Remove existing power management plist which contains settings from the configuration profile"
 rm -rf "/Library/Preferences/SystemConfiguration/com.apple.PowerManagement.plist"
 
+echo "Copy the backup of the original power management settings to be used by machine again"
 /bin/cp -f "/Library/Preferences/SystemConfiguration/com.apple.PowerManagement.backup" "/Library/Preferences/SystemConfiguration/com.apple.PowerManagement.plist"
 
+echo "Remove the backup of the power management settings"
 rm -rf "/Library/Preferences/SystemConfiguration/com.apple.PowerManagement.backup"
 
 # Kill cfprefsd to apply power management settings
+echo "Kill cfprefsd to apply the original power management settings"
 /usr/bin/killall cfprefsd
 
-# Delete the launchdaemon
+# Remove the launchdaemon
+echo "Remove the launchdaemon"
 rm -rf "/Library/LaunchDaemons/"$companyPlist".disablepm.plist"
+
+echo "Presentation Mode has been disabled. Original power settings have been restored."
 
 exit 0
