@@ -17,8 +17,21 @@ companyPath="/Library/EEI/edu.berkeley.eei"
 echo "$companyPath"
 
 # Obtain plist filename from companyPlist path
-companyPlist="echo ${companyPath##*/}"
+companyPlist=`echo ${companyPath##*/}`
 echo "$companyPlist"
+
+# Obtain the directory in the company path to confirm the directory exists
+companyPathDir=`echo $companyPath | sed 's:/[^/]*$::'`
+echo "$companyPathDir"
+
+# If the directory in the company path does not exist, then create it so we can write the plist to it
+# Modify chmod permissions and check of directory path if needed
+if [ ! -d "$companyPathDir" ];
+then
+	echo "$companyPathDir does not exist. Make the directory."
+	/bin/mkdir "$companyPathDir"
+	/bin/chmod 755 "$companyPathDir"
+fi
 
 # Time in seconds to automatically disable Presentation Mode. Default is 24 hours or 86400 seconds
 disableTime="86400"
