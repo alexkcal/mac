@@ -99,6 +99,6 @@ echo "Load the launchdaemon"
 # Kill cfprefsd to apply new settings
 # /usr/bin/killall cfprefsd
 
-echo "Presentation Mode set to enabled. Launchdaemon created to disable Presentation Mode in $disableTime seconds"
+echo "Presentation Mode set to enabled. Launchdaemon created to automatically disable Presentation Mode in $disableTime seconds"
 
 exit 0
