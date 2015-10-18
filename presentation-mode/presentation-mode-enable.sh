@@ -13,20 +13,20 @@
 
 ########## Modify these values to work for your environment ##########
 
-# Path to the Company plist /PATH/TO/COMPANY/PLIST e.g. /Library/Company/com.company.group
+# Modify path to the company plist /PATH/TO/COMPANY/PLIST e.g. /Library/Company/com.company.group
 companyPath="/PATH/TO/COMPANY/PLIST"
 echo "$companyPath"
 
-# Obtain plist filename from company path
+# Obtain plist filename from company path. Generally, no modification needed.
 companyPlist=`echo ${companyPath##*/}`
 echo "$companyPlist"
 
-# Obtain the directory in the company path to confirm the directory exists
+# Obtain the directory in the company path to confirm the directory exists. Generally, no modification needed.
 companyPathDir=`echo $companyPath | sed 's:/[^/]*$::'`
 echo "$companyPathDir"
 
 # If the directory in the company path does not exist, then create it so we can write the plist to it
-# Modify chmod permissions and check of directory path if needed
+# Modify chmod permissions if needed
 if [ ! -d "$companyPathDir" ];
 then
 	echo "$companyPathDir does not exist. Make the directory."
@@ -40,28 +40,32 @@ disableTime="86400"
 ########## End of values to modify ##########
 
 # Backup the current power settings plist. Delete the backup file if it exists
-if [ -f "/Library/Preferences/SystemConfiguration/com.apple.PowerManagement.backup"];
+if [ -f "/Library/Preferences/SystemConfiguration/com.apple.PowerManagement.backup" ];
 then
 	rm -rf "/Library/Preferences/SystemConfiguration/com.apple.PowerManagement.backup"
 fi
 
+echo "Backing up power management settings"
 /bin/cp "/Library/Preferences/SystemConfiguration/com.apple.PowerManagement.plist" "/Library/Preferences/SystemConfiguration/com.apple.PowerManagement.backup"
 
 # Write the value in the plist to enable Presentation Mode
+echo "Write value in plist for presentationmode to be enabled"
 /usr/bin/defaults write "$companyPath" presentationmode "enabled"
 
 # Run recon to evaluate plist for Casper Extension Attribute for Smart Group changes
+echo "Run recon to update inventory for EA and Smart Groups"
 /usr/local/bin/jamf recon
 
 # Message to user that the Mac is in Presentation Mode and to disable in SS or auto-disable in 24 hours
 /usr/bin/osascript <<-EOF
 			    tell application "System Events"
 			        activate
-			        display dialog "Mac is now in Presentation Mode. Please disable Presentation Mode using Self Service when you done. Presentation Mode will be automatically disabled in 24 hours" buttons {"OK"} default button 1
+			        display dialog "Mac is now in Presentation Mode. Please disable Presentation Mode using Self Service when you are done. Presentation Mode will be automatically disabled in 24 hours." buttons {"OK"} default button 1
 			    end tell
 			EOF
 
 # Create launchdaemon to automatically disable presentation mode at desired time limit
+echo "Create the launchdaemon to disable presentation mode"
 echo "<?xml version="1.0" encoding="UTF-8"?> 
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd"> 
 <plist version="1.0"> 
@@ -83,14 +87,18 @@ echo "<?xml version="1.0" encoding="UTF-8"?>
 </plist>" > /Library/LaunchDaemons/"$companyPlist".disablepm.plist
 
 # Set permissions on the launchdaemon plist
+echo "Set permissions on the launchdaemon"
 /usr/sbin/chown root:wheel /Library/LaunchDaemons/"$companyPlist".disablepm.plist
 /bin/chmod 644 /Library/LaunchDaemons/"$companyPlist".disablepm.plist
 /usr/bin/defaults write /Library/LaunchDaemons/"$companyPlist".disablepm.plist disabled -bool false
 
 # Load the launchdaemon
+echo "Load the launchdaemon"
 /bin/launchctl load -w /Library/LaunchDaemons/"$companyPlist".disablepm.plist
 
 # Kill cfprefsd to apply new settings
 # /usr/bin/killall cfprefsd
+
+echo "Presentation Mode set to enabled. Launchdaemon created to disable Presentation Mode in $disableTime seconds"
 
 exit 0
