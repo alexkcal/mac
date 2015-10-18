@@ -88,13 +88,13 @@ echo "<?xml version="1.0" encoding="UTF-8"?>
 
 # Set permissions on the launchdaemon plist
 echo "Set permissions on the launchdaemon"
-/usr/sbin/chown root:wheel /Library/LaunchDaemons/"$companyPlist".disablepm.plist
-/bin/chmod 644 /Library/LaunchDaemons/"$companyPlist".disablepm.plist
-/usr/bin/defaults write /Library/LaunchDaemons/"$companyPlist".disablepm.plist disabled -bool false
+/usr/sbin/chown root:wheel "/Library/LaunchDaemons/"$companyPlist".disablepm.plist"
+/bin/chmod 644 "/Library/LaunchDaemons/"$companyPlist".disablepm.plist"
+/usr/bin/defaults write "/Library/LaunchDaemons/"$companyPlist".disablepm.plist" disabled -bool false
 
 # Load the launchdaemon
 echo "Load the launchdaemon"
-/bin/launchctl load -w /Library/LaunchDaemons/"$companyPlist".disablepm.plist
+/bin/launchctl load -w "/Library/LaunchDaemons/"$companyPlist".disablepm.plist"
 
 # Kill cfprefsd to apply new settings
 # /usr/bin/killall cfprefsd
