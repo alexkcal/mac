@@ -14,7 +14,7 @@
 ########## Modify these values to work for your environment ##########
 
 # Path to the Company plist PATH/TO/COMPANY/PLIST e.g. /Library/Company/com.company.group
-companyPath="/Library/EEI/edu.berkeley.eei"
+companyPath="/PATH/TO/COMPANY/PLIST"
 echo "$companyPath"
 
 # Obtain plist filename from companyPlist path
