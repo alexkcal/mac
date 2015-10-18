@@ -13,11 +13,11 @@
 
 ########## Modify these values to work for your environment ##########
 
-# Path to the Company plist PATH/TO/COMPANY/PLIST e.g. /Library/Company/com.company.group
+# Path to the Company plist /PATH/TO/COMPANY/PLIST e.g. /Library/Company/com.company.group
 companyPath="/PATH/TO/COMPANY/PLIST"
 echo "$companyPath"
 
-# Obtain plist filename from companyPlist path
+# Obtain plist filename from company path
 companyPlist=`echo ${companyPath##*/}`
 echo "$companyPlist"
 
