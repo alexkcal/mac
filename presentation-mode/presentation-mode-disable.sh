@@ -59,7 +59,13 @@ rm -rf "/Library/Preferences/SystemConfiguration/com.apple.PowerManagement.backu
 echo "Kill cfprefsd to apply the original power management settings"
 /usr/bin/killall cfprefsd
 
-# Remove the launchdaemon
+# Unload and remove the launchdaemon
+echo "Disable the launchdaemon"
+/usr/bin/defaults write "/Library/LaunchDaemons/"$companyPlist".disablepm.plist" disabled -bool true
+
+echo "Unload the launchdaemon"
+/bin/launchctl unload -w "/Library/LaunchDaemons/"$companyPlist".disablepm.plist"
+
 echo "Remove the launchdaemon"
 rm -rf "/Library/LaunchDaemons/"$companyPlist".disablepm.plist"
 
