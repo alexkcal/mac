@@ -90,7 +90,8 @@ Policy Name: Presentation Mode Enable (or whatever you would like to call it)
 
 Execution Frequency: Ongoing
 Add Payload Scripts: Add presentation-mode-enable.sh
-
+Add Payload Maintance: Update Inventory
+- this is used to apply the new config profiles and for SS to auto update after running
 
 Optional: Remove Payload Restart Options if you would like
 
@@ -115,16 +116,16 @@ General Tab
 Policy Name: Presentation Mode Disable (or whatever you would like to call it)
 
 Execution Frequency: Ongoing
-IMPORTANT: Check the box "Custom" to add a custom trigger. The default custom trigger is "disablePM". You 
 
-can modify this in the enable script, but the script and JSS must match for the automatic disable to work 
-
-from the launchdaemon.
+IMPORTANT: Check the box "Custom" to add a custom trigger. The default custom trigger is "disablePM". You can modify this in the enable script, but the script and JSS must match for the automatic disable to work from the launchdaemon.
 Optional: Check the box "Make Available Offline" if you would like to cache the disable script so that the 
 
 automatic disable will still run even if the computer goes offline.
 
 Add Payload Scripts: Add presentation-mode-disable.sh
+
+Add Payload Maintance: Update Inventory
+- this is used to apply the new config profiles and for SS to auto update after running
 
 Optional: Remove Payload Restart Options if you would like
 
