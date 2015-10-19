@@ -2,25 +2,17 @@ Presentation Mode Readme
 
 This ReadMe file is horribly written, probably too wordy, maybe not enough info, grammatically incorrect, and needs revision. However, it should be accurate enough to get Presentation Mode setup in your Casper JSS. It will be revised to make more sense later.
 
-Please open issues in GitHub or contact me if you notice errors or other problems, which there could be and probably may be.
+Please open issues in GitHub or contact me if you notice errors or other problems, which there may be and probably could be.
 
 October 19, 2015 - Successfully tested in Mac OS X Yosemite and El Capitan using Casper version 9.81
 
-All examples are using the current setup and values in the script:
-- Company's plist is in a company directory in /Library, e.g. /Library/Company/com.company.group
-- Automatic disabling of presentation mode is 24 hours, or 86400 seconds
+- All examples are using the default setup and values in the script:
+   - Company's plist is in a company directory in /Library, e.g. /Library/Company/com.company.group
+   - Automatic disabling of presentation mode is 24 hours, or 86400 seconds
+- If your setup is the same, then you probably only need to modify the first variable "companyPath" in both the enable and disable script. Change the value "/PATH/TO/COMPANY/PLIST" to your company's plist.
+- If you would like to change the automatic disable timeout from 24 hours, or 86400 seconds, then change the value of the variable "disableTime" in the enable script to whatever amount of time you would like in seconds.
 
-If your setup is the same, then you probably only need to modify the first variable "companyPath" in both 
-
-the enable and disable script. Change the value "/PATH/TO/COMPANY/PLIST" to your company's plist.
-
-If you would like to change the automatic disable timeout from 24 hours, or 86400 seconds, then change the 
-
-value of the variable "disableTime" in the enable script to whatever amount of time you would like in 
-
-seconds.
-
-Creating Presentation Mode in Self Service in Casper's JSS
+###Creating Presentation Mode in Self Service in Casper's JSS###
 
 1. Create a new Extension Attribute for a value in your company's plist. If you do not use a company plist, then you may target a dummy file or create a new plist anywhere. The script is written for the plist though, so modify the script if you change the EA.
 
@@ -31,6 +23,7 @@ Inventory Display: Extension Attributes (or wherever you would like it to be dis
 Input Type: Script
 Script:
 
+```
 #!/bin/sh
 pmMode=`defaults read /Library/EEI/edu.berkeley.eei presentationmode`
 
@@ -39,8 +32,9 @@ if [ $pmMode == "" ]; then
 else
 	echo "<result>$pmMode</result>"
 fi
+```
 
-1 Create a new Smart Group with the criteria of your production Smart Group AND looking for the desired 
+2. Create a new Smart Group with the criteria of your production Smart Group AND looking for the desired 
 
 value of the EA created in the last step.
 
@@ -50,7 +44,7 @@ Computer Group member of Production-Macs
 and
 Presentation Mode is enabled
 
-1 If not done so already, create a Configuration Profile with your desired Screen Saver settings if not 
+3. If not done so already, create a Configuration Profile with your desired Screen Saver settings if not 
 
 already done. Scope it to your existing Smart Group that you would like it to apply to, such as your 
 
@@ -72,23 +66,16 @@ Uncheck Put the hard disk(s) to sleep whenever possible - Sets to never sleep th
 Keep Wake for Ethernet and Allow power button both checked
 Uncheck Start up automatically after a power failire
 
-Do the same on the Portable tab, but you must configure the settings for both Battery and Power Adapter 
-
-sub-tabs
+Do the same on the Portable tab, but you must configure the settings for both Battery and Power Adapter sub-tabs
 
 Schedule Tab - leave both unchecked
 
-
-
 Scope
-
 Add the Smart Group Presentation Mode
-
 No exclusions
 
 
-
-5. Upload the two scripts: presentation-mode-enable.sh and presentation-mode-disable to the JSS
+6. Upload the two scripts: presentation-mode-enable.sh and presentation-mode-disable to the JSS
 
 - Modify the variables to match your company's environment (e.g. plist location, automatic disable timeout, 
 
@@ -106,11 +93,6 @@ Policy Name: Presentation Mode Enable (or whatever you would like to call it)
 Execution Frequency: Ongoing
 Add Payload Scripts: Add presentation-mode-enable.sh
 
-Add Payload Maintenance: Check box for Update Inventory
-
-- Note: The script will run recon once to update the EA and smart groups. This recon will run at the end to 
-
-update smart groups and config profiles in case they do not get processed in the first recon
 
 Optional: Remove Payload Restart Options if you would like
 
@@ -145,12 +127,6 @@ Optional: Check the box "Make Available Offline" if you would like to cache the 
 automatic disable will still run even if the computer goes offline.
 
 Add Payload Scripts: Add presentation-mode-disable.sh
-
-Add Payload Maintenance: Check box for Update Inventory
-
-- Note: The script will run recon once to update the EA and smart groups. This recon will run at the end to 
-
-update smart groups and config profiles in case they do not get processed in the first recon
 
 Optional: Remove Payload Restart Options if you would like
 
