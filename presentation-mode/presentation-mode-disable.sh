@@ -61,9 +61,10 @@ echo "Unload the launchdaemon"
 echo "Remove the launchdaemon"
 rm -rf "/Library/LaunchDaemons/"$companyPlist".disablepm.plist"
 
+# Commented out. Run recon in JSS policy payload to update inventory.
 # Run recon again to apply configuration profiles, such as screen saver, after Smart Group changes
-echo "Run recon to apply configuration profiles"
-/usr/local/bin/jamf recon
+#echo "Run recon to apply configuration profiles"
+#/usr/local/bin/jamf recon
 
 # Message to user that the Mac is in Presentation Mode and is being automatically disabled now
 /usr/bin/osascript <<-EOF
