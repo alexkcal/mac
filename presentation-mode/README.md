@@ -22,11 +22,7 @@ seconds.
 
 Creating Presentation Mode in Self Service in Casper's JSS
 
-1. Create a new Extension Attribute for a value in your company's plist. If you do not use a company plist, 
-
-then you may target a dummy file or create a new plist anywhere. The script is written for the plist though, 
-
-so modify the script if you change the EA.
+1. Create a new Extension Attribute for a value in your company's plist. If you do not use a company plist, then you may target a dummy file or create a new plist anywhere. The script is written for the plist though, so modify the script if you change the EA.
 
 Example of Extension Attribute
 Display Name: Presentation Mode
@@ -44,7 +40,7 @@ else
 	echo "<result>$pmMode</result>"
 fi
 
-2. Create a new Smart Group with the criteria of your production Smart Group AND looking for the desired 
+1 Create a new Smart Group with the criteria of your production Smart Group AND looking for the desired 
 
 value of the EA created in the last step.
 
@@ -54,7 +50,7 @@ Computer Group member of Production-Macs
 and
 Presentation Mode is enabled
 
-3. If not done so already, create a Configuration Profile with your desired Screen Saver settings if not 
+1 If not done so already, create a Configuration Profile with your desired Screen Saver settings if not 
 
 already done. Scope it to your existing Smart Group that you would like it to apply to, such as your 
 
