@@ -96,8 +96,15 @@ echo "Set permissions on the launchdaemon"
 echo "Load the launchdaemon"
 /bin/launchctl load -w "/Library/LaunchDaemons/"$companyPlist".disablepm.plist"
 
+# Quit System Preferences in case it is currently open
+/usr/bin/osascript -e 'quit app "System Preferences"'
+
+# Get the logged in user to set the screen saver settings to Never with value of 0 to disable the screen saver
+loggedInUser=`/bin/ls -l /dev/console | /usr/bin/awk '{ print $3 }'`
+su -l "$loggedInUser" -c "defaults -currentHost write com.apple.screensaver idleTime 0"
+
 # Kill cfprefsd to apply new settings
-# /usr/bin/killall cfprefsd
+/usr/bin/killall cfprefsd
 
 echo "Presentation Mode set to enabled. Launchdaemon created to automatically disable Presentation Mode in $disableTime seconds"
 
