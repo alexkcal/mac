@@ -2,7 +2,7 @@ This ReadMe file is horribly written, probably too wordy, maybe not enough info,
 
 Please open issues in GitHub or contact me if you notice errors or other problems, which there may be and probably could be.
 
-October 19, 2015 - Successfully tested in Mac OS X Yosemite and El Capitan using Casper version 9.81
+October 19, 2015 - Successfully tested in Mac OS X Mavericks, Yosemite, and El Capitan using Casper version 9.81
 
 - All examples are using the default setup and values in the script:
    - Company's plist is in a company directory in /Library, e.g. /Library/Company/com.company.group
