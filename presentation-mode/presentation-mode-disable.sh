@@ -31,7 +31,7 @@ echo "$companyPathDir"
 /usr/bin/osascript <<-EOF
 			    tell application "System Events"
 			        activate
-			        display dialog "Mac is currently in Presentation Mode and has reached its expiration time. Auto-disabling Presentation Mode." buttons {"OK"} default button 1
+			        display dialog "Presentation Mode is being disabled either through Self Service, or it has reached the automatic disable timeout. Thank you for using Presentation Mode!" buttons {"OK"} default button 1
 			    end tell
 			EOF
 
