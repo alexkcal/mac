@@ -98,9 +98,10 @@ su -l "$loggedInUser" -c "defaults -currentHost write com.apple.screensaver idle
 # Kill cfprefsd to apply new settings
 /usr/bin/killall cfprefsd
 
+# Commented out. Run recon in JSS policy payload to update inventory.
 # Run recon again to apply configuration profiles, such as energy saver settings, after Smart Group changes
-echo "Run recon to apply configuration profiles"
-/usr/local/bin/jamf recon
+#echo "Run recon to apply configuration profiles"
+#/usr/local/bin/jamf recon
 
 # Message to user that the Mac is in Presentation Mode and to disable in SS or auto-disable in 24 hours
 /usr/bin/osascript <<-EOF
