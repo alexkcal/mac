@@ -27,14 +27,6 @@ echo "$companyPathDir"
 
 ########## End of values to modify ##########
 
-# Message to user that the Mac is in Presentation Mode and is being automatically disabled now
-/usr/bin/osascript <<-EOF
-			    tell application "System Events"
-			        activate
-			        display dialog "Presentation Mode is being disabled either through Self Service, or it has reached the automatic disable timeout. Thank you for using Presentation Mode!" buttons {"OK"} default button 1
-			    end tell
-			EOF
-
 # Write the value in the plist to disable Presentation Mode
 echo "Write value in plist for presentationmode to be disabled"
 /usr/bin/defaults write "$companyPath" presentationmode "disabled"
@@ -68,6 +60,18 @@ echo "Unload the launchdaemon"
 
 echo "Remove the launchdaemon"
 rm -rf "/Library/LaunchDaemons/"$companyPlist".disablepm.plist"
+
+# Run recon again to apply configuration profiles, such as screen saver, after Smart Group changes
+echo "Run recon to apply configuration profiles"
+/usr/local/bin/jamf recon
+
+# Message to user that the Mac is in Presentation Mode and is being automatically disabled now
+/usr/bin/osascript <<-EOF
+			    tell application "System Events"
+			        activate
+			        display dialog "Presentation Mode is being disabled either through Self Service, or it has reached the automatic disable timeout. Thank you for using Presentation Mode!" buttons {"OK"} default button 1
+			    end tell
+			EOF
 
 echo "Presentation Mode has been disabled. Original power settings have been restored."
 
