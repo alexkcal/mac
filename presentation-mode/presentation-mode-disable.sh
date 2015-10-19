@@ -35,6 +35,24 @@ echo "Write value in plist for presentationmode to be disabled"
 echo "Run recon to update inventory for EA and Smart Groups"
 /usr/local/bin/jamf recon
 
+# Message to user that the Mac is in Presentation Mode and is being automatically disabled now
+/usr/bin/osascript <<-EOF
+			    tell application "System Events"
+			        activate
+			        display dialog "Presentation Mode is being disabled either through Self Service, or it has reached the automatic disable timeout. Thank you for using Presentation Mode!" buttons {"OK"} default button 1
+			    end tell
+			EOF
+
+# Unload and remove the launchdaemon
+echo "Disable the launchdaemon"
+/usr/bin/defaults write "/Library/LaunchDaemons/"$companyPlist".disablepm.plist" disabled -bool true
+
+echo "Unload the launchdaemon"
+/bin/launchctl unload -w "/Library/LaunchDaemons/"$companyPlist".disablepm.plist"
+
+echo "Remove the launchdaemon"
+rm -rf "/Library/LaunchDaemons/"$companyPlist".disablepm.plist"
+
 # Delete the power management file because it contains the Energy Saver plist values
 # Copy the backup power management settings which has the previous user-defined settings
 # Delete the backup power management settings file
@@ -51,28 +69,10 @@ rm -rf "/Library/Preferences/SystemConfiguration/com.apple.PowerManagement.backu
 echo "Kill cfprefsd to apply the original power management settings"
 /usr/bin/killall cfprefsd
 
-# Unload and remove the launchdaemon
-echo "Disable the launchdaemon"
-/usr/bin/defaults write "/Library/LaunchDaemons/"$companyPlist".disablepm.plist" disabled -bool true
-
-echo "Unload the launchdaemon"
-/bin/launchctl unload -w "/Library/LaunchDaemons/"$companyPlist".disablepm.plist"
-
-echo "Remove the launchdaemon"
-rm -rf "/Library/LaunchDaemons/"$companyPlist".disablepm.plist"
-
 # Commented out. Run recon in JSS policy payload to update inventory.
 # Run recon again to apply configuration profiles, such as screen saver, after Smart Group changes
 #echo "Run recon to apply configuration profiles"
 #/usr/local/bin/jamf recon
-
-# Message to user that the Mac is in Presentation Mode and is being automatically disabled now
-/usr/bin/osascript <<-EOF
-			    tell application "System Events"
-			        activate
-			        display dialog "Presentation Mode is being disabled either through Self Service, or it has reached the automatic disable timeout. Thank you for using Presentation Mode!" buttons {"OK"} default button 1
-			    end tell
-			EOF
 
 echo "Presentation Mode has been disabled. Original power settings have been restored."
 
