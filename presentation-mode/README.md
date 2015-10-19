@@ -1,6 +1,4 @@
-Presentation Mode Readme
-
-This ReadMe file is horribly written, probably too wordy, maybe not enough info, grammatically incorrect, and needs revision. However, it should be accurate enough to get Presentation Mode setup in your Casper JSS. It will be revised to make more sense later.
+This ReadMe file is horribly written, probably too wordy, maybe not enough info, grammatically incorrect, and needs revision. However, it should be accurate enough to get Presentation Mode setup in your Casper JSS. It will be revised to make more sense later. Signed, author.
 
 Please open issues in GitHub or contact me if you notice errors or other problems, which there may be and probably could be.
 
