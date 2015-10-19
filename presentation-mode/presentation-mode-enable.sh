@@ -88,6 +88,14 @@ echo "Set permissions on the launchdaemon"
 echo "Load the launchdaemon"
 /bin/launchctl load -w "/Library/LaunchDaemons/"$companyPlist".disablepm.plist"
 
+# Message to user that the Mac is in Presentation Mode and to disable in SS or auto-disable in 24 hours
+/usr/bin/osascript <<-EOF
+			    tell application "System Events"
+			        activate
+			        display dialog "Mac is now in Presentation Mode. Please disable Presentation Mode using Self Service when you are done. Presentation Mode will be automatically disabled in 24 hours." buttons {"OK"} default button 1
+			    end tell
+			EOF
+
 # Quit System Preferences in case it is currently open
 /usr/bin/osascript -e 'quit app "System Preferences"'
 
@@ -102,14 +110,6 @@ su -l "$loggedInUser" -c "defaults -currentHost write com.apple.screensaver idle
 # Run recon again to apply configuration profiles, such as energy saver settings, after Smart Group changes
 #echo "Run recon to apply configuration profiles"
 #/usr/local/bin/jamf recon
-
-# Message to user that the Mac is in Presentation Mode and to disable in SS or auto-disable in 24 hours
-/usr/bin/osascript <<-EOF
-			    tell application "System Events"
-			        activate
-			        display dialog "Mac is now in Presentation Mode. Please disable Presentation Mode using Self Service when you are done. Presentation Mode will be automatically disabled in 24 hours." buttons {"OK"} default button 1
-			    end tell
-			EOF
 
 echo "Presentation Mode set to enabled. Launchdaemon created to automatically disable Presentation Mode in $disableTime seconds"
 
