@@ -39,20 +39,29 @@ echo "Run recon to update inventory for EA and Smart Groups"
 # Copy the backup power management settings which has the previous user-defined settings
 # Delete the backup power management settings file
 echo "Remove existing power management plist which contains settings from the configuration profile"
-rm -rf "/Library/Preferences/SystemConfiguration/com.apple.PowerManagement.plist"
+rm -f "/Library/Preferences/SystemConfiguration/com.apple.PowerManagement.plist"
 
 echo "Copy the backup of the original power management settings to be used by machine again"
 /bin/cp -f "/Library/Preferences/SystemConfiguration/com.apple.PowerManagement.backup" "/Library/Preferences/SystemConfiguration/com.apple.PowerManagement.plist"
 	
 echo "Remove the backup of the power management settings"
-rm -rf "/Library/Preferences/SystemConfiguration/com.apple.PowerManagement.backup"
+rm -f "/Library/Preferences/SystemConfiguration/com.apple.PowerManagement.backup"
 
 # Kill cfprefsd to apply power management settings
 echo "Kill cfprefsd to apply the original power management settings"
 /usr/bin/killall cfprefsd
 
-# Trigger the JSS policy to remove the launchdaemon
-/usr/local/bin/jamf policy -event removePMlaunchd
+# Unload and remove the launchdaemon
+echo "Disable the launchdaemon"
+/usr/bin/defaults write "/Library/LaunchDaemons/"$companyPlist".disablepm.plist" disabled -bool true
+	
+echo "Unload the launchdaemon"
+/bin/launchctl unload -w "/Library/LaunchDaemons/"$companyPlist".disablepm.plist"
+	
+echo "Remove the launchdaemon"
+rm -f "/Library/LaunchDaemons/"$companyPlist".disablepm.plist"
+	
+echo "Presentation Mode launchdaemon unloaded and removed"
 
 # Message to user that the Mac is in Presentation Mode and is being automatically disabled now
 /usr/bin/osascript <<-EOF
