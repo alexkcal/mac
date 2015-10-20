@@ -1,5 +1,7 @@
 #!/bin/sh
 
+# presentation-mode-launchdaemon-remove.sh
+
 # Use this script in the JSS as a separate policy with a custom trigger that gets called in the disable presentation mode script. It will unload and remove the launchdaemon that automatically disables presentation mode.
 
 ########## Modify these values to work for your environment ##########
