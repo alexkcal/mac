@@ -11,7 +11,7 @@
 # Alex Kim - EEI, UC Berkeley
 # 2015.10.16
 
-########## Modify these values to work for your environment ##########
+########## MODIFY FOR YOUR COMPANY ENVIRONMENT ##########
 
 # Modify path to the company plist /PATH/TO/COMPANY/PLIST e.g. /Library/Company/com.company.group
 companyPath="/PATH/TO/COMPANY/PLIST"
@@ -37,7 +37,7 @@ fi
 # Time in seconds to automatically disable Presentation Mode. Default is 24 hours or 86400 seconds
 disableTime="86400"
 
-########## End of values to modify ##########
+########## END OF MODIFY ##########
 
 # Backup the current power settings plist. Delete the backup file if it exists
 if [ -f "/Library/Preferences/SystemConfiguration/com.apple.PowerManagement.backup" ];
@@ -56,6 +56,8 @@ echo "Write value in plist for presentationmode to be enabled"
 echo "Run recon to update inventory for EA and Smart Groups"
 /usr/local/bin/jamf recon
 
+########## CREATE LAUNCHDAEMON ##########
+
 # Create launchdaemon to automatically disable presentation mode at desired time limit
 echo "Create the launchdaemon to disable presentation mode"
 echo "<?xml version="1.0" encoding="UTF-8"?> 
@@ -68,10 +70,8 @@ echo "<?xml version="1.0" encoding="UTF-8"?>
 	<string>"$companyPlist".disablepm</string> 
 	<key>ProgramArguments</key> 
 	<array> 
-		<string>/usr/local/bin/jamf</string>
-		<string>policy</string>
-		<string>-event</string>
-		<string>disablePM</string>
+		<string>/bin/sh</string>
+		<string>"$companyPathDir"/disablePM.sh</string>
 	</array>
 	<key>StartInterval</key>
 	<integer>"$disableTime"</integer> 
@@ -87,6 +87,57 @@ echo "Set permissions on the launchdaemon"
 # Load the launchdaemon
 echo "Load the launchdaemon"
 /bin/launchctl load -w "/Library/LaunchDaemons/"$companyPlist".disablepm.plist"
+
+########## END LAUNCHDAEMON ##########
+
+########## CREATE AUTO DISABLE PM SCRIPT ##########
+
+echo "Create the auto disable presentation mode script on the local drive"
+echo "#!/bin/sh
+# Automatically Disables Presentation Mode
+# Write the value in the plist to disable Presentation Mode
+echo "Write value in plist for presentationmode to be disabled"
+/usr/bin/defaults write "$companyPath" presentationmode "disabled"
+# Run recon to evaluate plist for Casper Extension Attribute for Smart Group changes
+echo "Run recon to update inventory for EA and Smart Groups"
+/usr/local/bin/jamf recon
+# Delete the power management file because it contains the Energy Saver plist values
+# Copy the backup power management settings which has the previous user-defined settings
+# Delete the backup power management settings file
+echo "Remove existing power management plist which contains settings from the configuration profile"
+rm -f "/Library/Preferences/SystemConfiguration/com.apple.PowerManagement.plist"
+echo "Copy the backup of the original power management settings to be used by machine again"
+/bin/cp -f "/Library/Preferences/SystemConfiguration/com.apple.PowerManagement.backup" "/Library/Preferences/SystemConfiguration/com.apple.PowerManagement.plist"
+echo "Remove the backup of the power management settings"
+rm -f "/Library/Preferences/SystemConfiguration/com.apple.PowerManagement.backup"
+# Kill cfprefsd to apply power management settings
+echo "Kill cfprefsd to apply the original power management settings"
+/usr/bin/killall cfprefsd
+# Unload and remove the launchdaemon
+echo "Disable the launchdaemon"
+/usr/bin/defaults write "/Library/LaunchDaemons/"$companyPlist".disablepm.plist" disabled -bool true
+echo "Unload the launchdaemon"
+/bin/launchctl unload -w "/Library/LaunchDaemons/"$companyPlist".disablepm.plist"
+echo "Remove the launchdaemon"
+rm -f "/Library/LaunchDaemons/"$companyPlist".disablepm.plist"
+echo "Presentation Mode launchdaemon unloaded and removed"
+# Message to user that the Mac is in Presentation Mode and is being automatically disabled now
+/usr/bin/osascript <<-EOF
+			    tell application "System Events"
+			        activate
+			        display dialog "Presentation Mode is being disabled either through Self Service, or it has reached the automatic disable timeout. Thank you for using Presentation Mode!" buttons {"OK"} default button 1
+			    end tell
+			EOF
+echo "Presentation Mode has been disabled. Original power settings have been restored."
+rm -f $0
+exit 0" > "$companyPathDir/disablePM.sh"
+
+# Set permissions on the auto disable PM script
+echo "Set permissions on the auto disable presentation mode script"
+/usr/sbin/chown root:wheel "$companyPathDir/disablePM.sh"
+/bin/chmod 644 "$companyPathDir/disablePM.sh"
+
+########## END AUTO DISABLE PM SCRIPT ##########
 
 # Message to user that the Mac is in Presentation Mode and to disable in SS or auto-disable in 24 hours
 /usr/bin/osascript <<-EOF
