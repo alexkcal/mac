@@ -129,7 +129,7 @@ echo "Presentation Mode launchdaemon unloaded and removed"
 			    end tell
 			EOF
 echo "Presentation Mode has been disabled. Original power settings have been restored."
-rm -f $0
+rm -f "$companyPathDir/disablePM.sh"
 exit 0" > "$companyPathDir/disablePM.sh"
 
 # Set permissions on the auto disable PM script
