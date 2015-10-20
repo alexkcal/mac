@@ -27,54 +27,42 @@ echo "$companyPathDir"
 
 ########## End of values to modify ##########
 
-if [ -f "/Library/Preferences/SystemConfiguration/com.apple.PowerManagement.backup" ];
-then
-	# Write the value in the plist to disable Presentation Mode
-	echo "Write value in plist for presentationmode to be disabled"
-	/usr/bin/defaults write "$companyPath" presentationmode "disabled"
+# Write the value in the plist to disable Presentation Mode
+echo "Write value in plist for presentationmode to be disabled"
+/usr/bin/defaults write "$companyPath" presentationmode "disabled"
 
-	# Run recon to evaluate plist for Casper Extension Attribute for Smart Group changes
-	echo "Run recon to update inventory for EA and Smart Groups"
-	/usr/local/bin/jamf recon
-	
-	# Delete the power management file because it contains the Energy Saver plist values
-	# Copy the backup power management settings which has the previous user-defined settings
-	# Delete the backup power management settings file
-	echo "Remove existing power management plist which contains settings from the configuration profile"
-	rm -rf "/Library/Preferences/SystemConfiguration/com.apple.PowerManagement.plist"
+# Run recon to evaluate plist for Casper Extension Attribute for Smart Group changes
+echo "Run recon to update inventory for EA and Smart Groups"
+/usr/local/bin/jamf recon
 
-	echo "Copy the backup of the original power management settings to be used by machine again"
-	/bin/cp -f "/Library/Preferences/SystemConfiguration/com.apple.PowerManagement.backup" "/Library/Preferences/SystemConfiguration/com.apple.PowerManagement.plist"
-	
-	echo "Remove the backup of the power management settings"
-	rm -rf "/Library/Preferences/SystemConfiguration/com.apple.PowerManagement.backup"
+# Delete the power management file because it contains the Energy Saver plist values
+# Copy the backup power management settings which has the previous user-defined settings
+# Delete the backup power management settings file
+echo "Remove existing power management plist which contains settings from the configuration profile"
+rm -rf "/Library/Preferences/SystemConfiguration/com.apple.PowerManagement.plist"
 
-	# Kill cfprefsd to apply power management settings
-	echo "Kill cfprefsd to apply the original power management settings"
-	/usr/bin/killall cfprefsd
+echo "Copy the backup of the original power management settings to be used by machine again"
+/bin/cp -f "/Library/Preferences/SystemConfiguration/com.apple.PowerManagement.backup" "/Library/Preferences/SystemConfiguration/com.apple.PowerManagement.plist"
 	
-	# Message to user that the Mac is in Presentation Mode and is being automatically disabled now
-	/usr/bin/osascript <<-EOF
-				    tell application "System Events"
-				        activate
-				        display dialog "Presentation Mode is being disabled either through Self Service, or it has reached the automatic disable timeout. Thank you for using Presentation Mode!" buttons {"OK"} default button 1
-				    end tell
-				EOF
+echo "Remove the backup of the power management settings"
+rm -rf "/Library/Preferences/SystemConfiguration/com.apple.PowerManagement.backup"
 
-	echo "Presentation Mode has been disabled. Original power settings have been restored."
-else
-	# Unload and remove the launchdaemon
-	echo "Disable the launchdaemon"
-	/usr/bin/defaults write "/Library/LaunchDaemons/"$companyPlist".disablepm.plist" disabled -bool true
-	
-	echo "Unload the launchdaemon"
-	/bin/launchctl unload -w "/Library/LaunchDaemons/"$companyPlist".disablepm.plist"
-	
-	echo "Remove the launchdaemon"
-	rm -f "/Library/LaunchDaemons/"$companyPlist".disablepm.plist"
-	
-	echo "Presentation Mode launchdaemon unladed and removed"
-fi
+# Kill cfprefsd to apply power management settings
+echo "Kill cfprefsd to apply the original power management settings"
+/usr/bin/killall cfprefsd
+
+# Trigger the JSS policy to remove the launchdaemon
+/usr/local/bin/jamf policy -event removePMlaunchd
+
+# Message to user that the Mac is in Presentation Mode and is being automatically disabled now
+/usr/bin/osascript <<-EOF
+			    tell application "System Events"
+			        activate
+			        display dialog "Presentation Mode is being disabled either through Self Service, or it has reached the automatic disable timeout. Thank you for using Presentation Mode!" buttons {"OK"} default button 1
+			    end tell
+			EOF
+
+echo "Presentation Mode has been disabled. Original power settings have been restored."
 
 # Commented out. Run recon in JSS policy payload to update inventory.
 # Run recon again to apply configuration profiles, such as screen saver, after Smart Group changes
