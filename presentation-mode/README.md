@@ -1,3 +1,5 @@
+October 20 - opened a new issue because the launchdaemon fails to delete itself after disabling PM. created a remove script but also planning on making changes to simplify.
+
 This ReadMe file is horribly written, probably too wordy, maybe not enough info, grammatically incorrect, and needs revision. However, it should be accurate enough to get Presentation Mode setup in your Casper JSS. It will be revised to make more sense later. Signed, author.
 
 Please open issues in GitHub or contact me if you notice errors or other problems, which there may be and probably could be.
