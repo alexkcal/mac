@@ -13,7 +13,7 @@ October 19, 2015 - Successfully tested in Mac OS X Mavericks, Yosemite, and El C
 ###Creating Presentation Mode in Self Service in Casper's JSS###
 
 1. Create a new Extension Attribute for a value in your company's plist. If you do not use a company plist, then you may target a dummy file or create a new plist anywhere. The script is written for the plist though, so modify the script if you change the EA.
-- ######Example of Extension Attribute######
+ ######Example of Extension Attribute######
  - Display Name: Presentation Mode
  - Data Type: String
  - Inventory Display: Extension Attributes (or wherever you would like it to be displayed)
