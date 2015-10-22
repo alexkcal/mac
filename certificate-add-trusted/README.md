@@ -1,6 +1,6 @@
-##Adding a Trusted Certificate##  
+##Adding a Trusted Certificate
 
-Used thi script to add a certificate as trusted to the System Keychain and/or the logged in user's login keychain.  
+Used this script to add a certificate as trusted to the System Keychain and/or the logged in user's login keychain.  
 
 ######Modifying the Variables in the Script######
 - Certificate name and location: directory path and certificate name, e.g. /private/tmp/certificate.cer
