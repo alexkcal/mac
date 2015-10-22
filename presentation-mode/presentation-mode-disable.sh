@@ -60,6 +60,13 @@ echo "Unload the launchdaemon"
 	
 echo "Remove the launchdaemon"
 rm -f "/Library/LaunchDaemons/"$companyPlist".disablepm.plist"
+
+# Remove the disablePM auto script if it exists
+if [ -f "$companyPathDir/disablePM.sh" ];
+then
+	echo "Removing disablePM script"
+	rm -f "$companyPathDir/disablePM.sh"
+fi
 	
 echo "Presentation Mode launchdaemon unloaded and removed"
 
