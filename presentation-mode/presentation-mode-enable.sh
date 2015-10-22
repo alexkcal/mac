@@ -58,6 +58,13 @@ echo "Run recon to update inventory for EA and Smart Groups"
 
 ########## CREATE LAUNCHDAEMON ##########
 
+# Check if launchdaemon exists and delete it if it does
+if [ -f "/Library/LaunchDaemons/$companyPlist.disablepm.plist" ];
+then 
+	echo "Deleting disablepm LaunchDaemon"
+	rm -f "/Library/LaunchDaemons/$companyPlist.disablepm.plist"
+fi
+
 # Create launchdaemon to automatically disable presentation mode at desired time limit
 echo "Create the launchdaemon to disable presentation mode"
 echo "<?xml version="1.0" encoding="UTF-8"?> 
@@ -91,6 +98,13 @@ echo "Load the launchdaemon"
 ########## END LAUNCHDAEMON ##########
 
 ########## CREATE AUTO DISABLE PM SCRIPT ##########
+
+# Check if disablePM script exists and delete it if it does
+if [ -f "$companyPathDir/disablePM.sh" ];
+then 
+	echo "Deleting disablePM script"
+	rm -f "$companyPathDir/disablePM.sh"
+fi
 
 echo "Create the auto disable presentation mode script on the local drive"
 echo "#!/bin/sh
