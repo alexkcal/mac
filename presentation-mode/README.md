@@ -1,5 +1,3 @@
-October 20 - opened a new issue because the launchdaemon fails to delete itself after disabling PM. created a remove script but also planning on making changes to simplify.
-
 This ReadMe file is horribly written, probably too wordy, maybe not enough info, grammatically incorrect, and needs revision. However, it should be accurate enough to get Presentation Mode setup in your Casper JSS. It will be revised to make more sense later. Signed, author.
 
 Please open issues in GitHub or contact me if you notice errors or other problems, which there may be and probably could be.
@@ -15,13 +13,12 @@ October 19, 2015 - Successfully tested in Mac OS X Mavericks, Yosemite, and El C
 ###Creating Presentation Mode in Self Service in Casper's JSS###
 
 1. Create a new Extension Attribute for a value in your company's plist. If you do not use a company plist, then you may target a dummy file or create a new plist anywhere. The script is written for the plist though, so modify the script if you change the EA.
-
-Example of Extension Attribute
-Display Name: Presentation Mode
-Data Type: String
-Inventory Display: Extension Attributes (or wherever you would like it to be displayed)
-Input Type: Script
-Script:
+- ######Example of Extension Attribute######
+ - Display Name: Presentation Mode
+ - Data Type: String
+ - Inventory Display: Extension Attributes (or wherever you would like it to be displayed)
+ - Input Type: Script
+ - Script:
 
 ```
 #!/bin/sh
@@ -34,9 +31,7 @@ else
 fi
 ```
 
-2. Create a new Smart Group with the criteria of your production Smart Group AND looking for the desired 
-
-value of the EA created in the last step.
+2. Create a new Smart Group with the criteria of your production Smart Group AND looking for the desired value of the EA created in the last step.
 
 Example of Criteria
 Name: Presentation Mode
